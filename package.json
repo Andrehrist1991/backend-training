@@ -1,0 +1,8 @@
+{
+  "name": "backend-training",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Andrehrist1991/backend-training.git",
+  "author": "Andrew Khrystoiev <andrehrist1991@gmail.com>",
+  "license": "MIT"
+}
