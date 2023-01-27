@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src/",
+    "jsx": "react",
+    "lib": ["dom", "es2017"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "target": "esnext",
+    "paths": {
+      "API/*": ["API/*"],
+      "Assets/*": ["Assets/*"],
+      "Components/*": ["Components/*"],
+      "Constants/*": ["Constants/*"],
+      "Engine/*": ["Engine/*"],
+      "Helpers/*": ["Helpers/*"],
+      "Hooks/*": ["Hooks/*"],
+      "Models/*": ["Models/*"],
+      "Screens/*": ["Screens/*"]
+    }
+  },
+  "exclude": ["node_modules/", "**/node_modules/*", "build"],
+  "include": ["src/**/*"]
+}

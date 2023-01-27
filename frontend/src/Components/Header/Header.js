@@ -1,22 +1,29 @@
 // Modules
 import Nav from 'react-bootstrap/Nav';
+import { NavLink } from 'react-router-dom';
+
+// Constants
+import { ROUTES } from 'Constants/routes';
+
+// Helpers
+import cssModuleCXFactory from 'Helpers/cssModuleCXFactory';
 
 // Styles
 import styles from './Header.module.scss';
 
+const getClassName = cssModuleCXFactory(styles);
+
 function Header() {
   return (
-    <Nav variant="tabs" defaultActiveKey="/home">
-      <Nav.Item>
-        <Nav.Link href="/home">Active</Nav.Link>
+    <Nav className="d-flex justify-content-center" variant="tabs" defaultActiveKey="/">
+      <Nav.Item className={getClassName('item')}>
+        <NavLink className="nav-link" to={ROUTES.congratulations}>Congratulations</NavLink>
       </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="link-1">Option 2</Nav.Link>
+      <Nav.Item className={getClassName('item')}>
+        <NavLink className="nav-link" to={ROUTES.orders} href={ROUTES.orders}>Orders</NavLink>
       </Nav.Item>
-      <Nav.Item>
-        <Nav.Link eventKey="disabled" disabled>
-          Disabled
-        </Nav.Link>
+      <Nav.Item className={getClassName('item')}>
+        <NavLink className="nav-link" to={ROUTES.newOrder}>New Order</NavLink>
       </Nav.Item>
     </Nav>
   );
