@@ -10,6 +10,7 @@ import size from 'lodash/size';
 
 // Constants
 import { FORM_FIELDS } from 'Constants/orderFormFields';
+import { VALIDATION_MESSAGES } from 'Validator/validation-messages';
 
 // Helpers
 import cssModuleCXFactory from 'Helpers/cssModuleCXFactory';
@@ -19,6 +20,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styles from './OrderForm.module.scss';
 
 const getClassName = cssModuleCXFactory(styles);
+
+const required = (value, type) => {
+  switch (type) {
+    case FORM_FIELDS.email:
+      return value ? undefined : VALIDATION_MESSAGES.email;
+    default:
+      throw new Error(`Unknown type: ${type}`);
+  }
+};
 
 function RequiredPrefix() {
   return (<span className={getClassName('required-prefix')}>* </span>);
@@ -47,7 +57,13 @@ function OrderForm(props) {
                 <RequiredPrefix />
                 Email
               </Form.Label>
-              <Field className="form-control" component="input" name={FORM_FIELDS.email} placeholder="Your email" type="email" />
+              <Field
+                className="form-control"
+                component="input"
+                name={FORM_FIELDS.email}
+                placeholder="Your email"
+                type="email"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -55,7 +71,13 @@ function OrderForm(props) {
                 <RequiredPrefix />
                 Name
               </Form.Label>
-              <Field className="form-control" component="input" name={FORM_FIELDS.name} placeholder="Your name" type="text" />
+              <Field
+                className="form-control"
+                component="input"
+                name={FORM_FIELDS.name}
+                placeholder="Your name"
+                type="text"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -63,7 +85,13 @@ function OrderForm(props) {
                 <RequiredPrefix />
                 Last Name
               </Form.Label>
-              <Field className="form-control" component="input" name={FORM_FIELDS.lastName} placeholder="Your last name" type="text" />
+              <Field
+                className="form-control"
+                component="input"
+                name={FORM_FIELDS.lastName}
+                placeholder="Your last name"
+                type="text"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -71,7 +99,13 @@ function OrderForm(props) {
                 <RequiredPrefix />
                 Phone
               </Form.Label>
-              <Field className="form-control" component="input" name={FORM_FIELDS.phone} placeholder="Your phone" type="phone" />
+              <Field
+                className="form-control"
+                component="input"
+                name={FORM_FIELDS.phone}
+                placeholder="Your phone"
+                type="phone"
+              />
             </Form.Group>
 
             <h2>Order</h2>
@@ -111,13 +145,11 @@ function OrderForm(props) {
                     >
                       Add Position
                     </Button>
-                    {size(fields) > 1 && (<Button
-                      className={`${getClassName('button')} mb-3`}
-                      onClick={() => pop(FORM_FIELDS.position)}
-                      variant="outline-danger"
-                    >
-                      Remove Position
-                    </Button>)}
+                    {size(fields) > 1 && (
+                      <Button className={`${getClassName('button')} mb-3`} onClick={() => pop(FORM_FIELDS.position)} variant="outline-danger">
+                        Remove Position
+                      </Button>
+                    )}
                   </div>
                 </>
               )}
@@ -125,7 +157,11 @@ function OrderForm(props) {
 
             <Form.Group className="mb-3">
               <Form.Label>Type </Form.Label>
-              <Field className="form-select" component="select" name={FORM_FIELDS.type}>
+              <Field
+                className="form-select"
+                component="select"
+                name={FORM_FIELDS.type}
+              >
                 <option value="1">Wholesale</option>
                 <option value="2">Retail</option>
               </Field>
@@ -133,7 +169,11 @@ function OrderForm(props) {
 
             <Form.Group className="mb-3">
               <Form.Label>Provider </Form.Label>
-              <Field className="form-select" component="select" name={FORM_FIELDS.provider}>
+              <Field
+                className="form-select"
+                component="select"
+                name={FORM_FIELDS.provider}
+              >
                 <option value="1">Provider 1</option>
                 <option value="2">Provider 2</option>
               </Field>
@@ -141,7 +181,12 @@ function OrderForm(props) {
 
             <Form.Group className="mb-3" controlId="id">
               <Form.Label>Order ID </Form.Label>
-              <Field className="form-control" component="input" name={FORM_FIELDS.id} type="text" />
+              <Field
+                className="form-control"
+                component="input"
+                name={FORM_FIELDS.id}
+                type="text"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="date">
@@ -149,19 +194,36 @@ function OrderForm(props) {
                 <RequiredPrefix />
                 Order date{' '}
               </Form.Label>
-              <Field className={getClassName('date-picker')} component={DatePicker} name={FORM_FIELDS.performed} />
+              <Field
+                className={getClassName('date-picker')}
+                component={DatePicker}
+                name={FORM_FIELDS.performed}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="date">
               <Form.Label>Your message </Form.Label>
-              <Field as="textarea" className="form-control" component="textarea" name={FORM_FIELDS.message} />
+              <Field
+                as="textarea"
+                className="form-control"
+                component="textarea"
+                name={FORM_FIELDS.message}
+              />
             </Form.Group>
 
             <div className="mb-3 d-flex justify-content-end">
-              <Button className={getClassName('button')} variant="primary" type="submit">
+              <Button
+                className={getClassName('button')}
+                type="submit"
+                variant="primary"
+              >
                 Submit
               </Button>
-              <Button className={getClassName('button')} onClick={form.reset} variant="outline-danger">
+              <Button
+                className={getClassName('button')}
+                onClick={form.reset}
+                variant="outline-danger"
+              >
                 Cancel
               </Button>
             </div>
