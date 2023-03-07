@@ -1,6 +1,7 @@
 // Modules
 import { memo } from 'react';
 import { Button, Table } from 'react-bootstrap';
+import PropTypes from 'prop-types';
 
 // Helpers
 import cssModuleCXFactory from 'Helpers/cssModuleCXFactory';
@@ -23,7 +24,9 @@ const ordersData = [
   },
 ];
 
-function OrdersTable() {
+function OrdersTable(props) {
+  const { editOrder } = props;
+  
   return (
     <div className="container">
       <div className="row justify-content-center">
@@ -53,7 +56,7 @@ function OrdersTable() {
                   <td>{order.provider}</td>
                   <td>{order.performed}</td>
                   <td>{order.status}</td>
-                  <td><Button variant="dark">Edit</Button></td>
+                  <td><Button onClick={editOrder} variant="dark">Edit</Button></td>
                 </tr>
               ))}
             </tbody>
@@ -63,5 +66,9 @@ function OrdersTable() {
     </div>
   );
 }
+
+OrdersTable.propTypes = {
+  editOrder: PropTypes.func,
+};
 
 export default memo(OrdersTable);
