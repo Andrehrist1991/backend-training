@@ -12,7 +12,7 @@ import ordersReducer from 'Engine/Orders';
 */
 
 const rootReducer = {
-  ordersReducer,
+  orders: ordersReducer,
 };
 
 export default rootReducer;

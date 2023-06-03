@@ -1,14 +1,19 @@
 // Modules
 import { createSlice } from '@reduxjs/toolkit';
+import assign from 'lodash/assign';
 import set from 'lodash/set';
 
 // // Engine
 import asyncActions from './async-actions';
 
-const {} = asyncActions;
+const { getAllOrders } = asyncActions;
 
 const initialState = {
-  orders: {},
+  orders: {
+    data: {},
+    error: false,
+    pending: false,
+  },
 };
 
 
@@ -22,21 +27,20 @@ export const slice = createSlice({
   },
   extraReducers(builder) {
 
-    /* */
-    // builder
-    //   .addCase(getUserProjects.pending, (state) => {
-    //     assign(state.userProjects, { pending: true });
-    //   })
-    //   .addCase(getUserProjects.rejected, (state) => {
-    //     assign(state.userProjects, { error: true, pending: false });
-    //   })
-    //   .addCase(getUserProjects.fulfilled, (state, { payload }) => {
-    //     assign(state.userProjects, {
-    //       data: payload,
-    //       error: false,
-    //       pending: false,
-    //     });
-    //   });
+    /* Get all orders */
+    builder
+      .addCase(getAllOrders.pending, (state) => {
+        assign(state.orders, { pending: true });
+      })
+      .addCase(getAllOrders.rejected, (state) => {
+        assign(state.orders, { error: true, pending: false });
+      })
+      .addCase(getAllOrders.fulfilled, (state, { payload }) => {
+        assign(state.orders, {
+          data: payload,
+          pending: false,
+        });
+      });
   },
 });
 
