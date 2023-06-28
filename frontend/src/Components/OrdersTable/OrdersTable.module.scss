@@ -5,3 +5,31 @@
     vertical-align: middle;
   }
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+.status-item {
+  transition: .3s;
+
+  &.expired {
+    background: #fff705;
+  }
+
+  &.failed {
+    background: #ff8080;
+  }
+
+  &.finished {
+    background: #fff;
+  }
+
+  &.new {
+    background: #8dff80;
+  }
+
+  &.waiting {
+    background: #96c6fc;
+  }
+}

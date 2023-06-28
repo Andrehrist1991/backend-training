@@ -2,6 +2,9 @@
 import { memo } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import cx  from 'classnames';
+import lowerCase  from 'lodash/lowerCase';
+import map from 'lodash/map';
 
 // Helpers
 import cssModuleCXFactory from 'Helpers/cssModuleCXFactory';
@@ -11,21 +14,8 @@ import styles from './OrdersTable.module.scss';
 
 const getClassName = cssModuleCXFactory(styles);
 
-const ordersData = [
-  {
-    date: '22/11/63',
-    name: 'John Doe',
-    id: 'p-009989',
-    type: 'Retail',
-    customer: 'Joe Biden',
-    provider: 'Provider 1',
-    performed: '22/11/63',
-    status: 'Waiting',
-  },
-];
-
 function OrdersTable(props) {
-  const { editOrder } = props;
+  const { editOrder, orders, updateStatus } = props;
   
   return (
     <div className="container">
@@ -38,7 +28,6 @@ function OrdersTable(props) {
                 <th>Name</th>
                 <th>ID</th>
                 <th>Type</th>
-                <th>Customer</th>
                 <th>Provider</th>
                 <th>Executed</th>
                 <th>Status</th>
@@ -46,17 +35,16 @@ function OrdersTable(props) {
               </tr>
             </thead>
             <tbody>
-              {ordersData.map((order) => (
+              {map(orders, (order) => (
                 <tr key={order.id}>
                   <td>{order.date}</td>
-                  <td>{order.name}</td>
-                  <td>{order.id}</td>
+                  <td>{order.fullName}</td>
+                  <td>{order._id}</td>
                   <td>{order.type}</td>
-                  <td>{order.customer}</td>
                   <td>{order.provider}</td>
-                  <td>{order.performed}</td>
-                  <td>{order.status}</td>
-                  <td><Button onClick={editOrder} variant="dark">Edit</Button></td>
+                  <td>{order.executed}</td>
+                  <td className={cx(getClassName('status-item'), getClassName('clickable'), getClassName(lowerCase(order?.status)))} onClick={() => updateStatus(order.id, order.status)}>{order.status}</td>
+                  <td><Button onClick={() => editOrder(order)} variant="dark">Edit</Button></td>
                 </tr>
               ))}
             </tbody>
@@ -67,8 +55,14 @@ function OrdersTable(props) {
   );
 }
 
+OrdersTable.defaultProps = {
+  orders: [],
+};
+
 OrdersTable.propTypes = {
   editOrder: PropTypes.func,
+  orders: PropTypes.array,
+  updateStatus: PropTypes.func,
 };
 
 export default memo(OrdersTable);

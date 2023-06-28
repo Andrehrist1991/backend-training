@@ -1,5 +1,6 @@
 // Modules
-import { memo } from 'react';
+import { memo, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import { Field, useField } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
@@ -10,6 +11,7 @@ import size from 'lodash/size';
 
 // Constants
 import { FORM_FIELDS } from 'Constants/orderFormFields';
+import { SALES_PROVIDERS, SALE_TYPES } from 'Constants/constants';
 import { VALIDATION_MESSAGES } from 'Validator/validation-messages';
 
 // Helpers
@@ -35,7 +37,15 @@ function RequiredPrefix() {
 }
 
 function OrderForm(props) {
-  const { form, handleSubmit } = props;
+  const {
+    editOrderId,
+    form,
+    handleSubmit,
+    isNewOrderMode,
+    onCancel,
+    onDeleteOrder,
+  } = props;
+  const [startDate, setStartDate] = useState(new Date());
   const watchField = useField(FORM_FIELDS.position);
 
   const pop = get(form, 'mutators.pop');
@@ -114,7 +124,10 @@ function OrderForm(props) {
               {({ fields }) => (
                 <>
                   {fields.map((position, index) => (
-                    <Form.Group className="mb-3 position-relative">
+                    <Form.Group
+                      className="mb-3 position-relative"
+                      key={position}
+                    >
                       <Form.Label>
                         <RequiredPrefix />
                         Position #{index + 1}
@@ -128,7 +141,8 @@ function OrderForm(props) {
                       />
                       <span
                         className={cx(getClassName('remove-cross'), {
-                          [getClassName('remove-cross--disabled')]: size(fields) < 2,
+                          [getClassName('remove-cross--disabled')]:
+                            size(fields) < 2,
                         })}
                         onClick={() => fields.remove(index)}
                       >
@@ -146,7 +160,11 @@ function OrderForm(props) {
                       Add Position
                     </Button>
                     {size(fields) > 1 && (
-                      <Button className={`${getClassName('button')} mb-3`} onClick={() => pop(FORM_FIELDS.position)} variant="outline-danger">
+                      <Button
+                        className={`${getClassName('button')} mb-3`}
+                        onClick={() => pop(FORM_FIELDS.position)}
+                        variant="outline-danger"
+                      >
                         Remove Position
                       </Button>
                     )}
@@ -162,8 +180,10 @@ function OrderForm(props) {
                 component="select"
                 name={FORM_FIELDS.type}
               >
-                <option value="1">Wholesale</option>
-                <option value="2">Retail</option>
+                <option value={SALE_TYPES.wholesale}>
+                  {SALE_TYPES.wholesale}
+                </option>
+                <option value={SALE_TYPES.retail}>{SALE_TYPES.retail}</option>
               </Field>
             </Form.Group>
 
@@ -174,34 +194,51 @@ function OrderForm(props) {
                 component="select"
                 name={FORM_FIELDS.provider}
               >
-                <option value="1">Provider 1</option>
-                <option value="2">Provider 2</option>
+                <option value={SALES_PROVIDERS.provider_1}>
+                  {SALES_PROVIDERS.provider_1}
+                </option>
+                <option value={SALES_PROVIDERS.provider_2}>
+                  {SALES_PROVIDERS.provider_2}
+                </option>
               </Field>
             </Form.Group>
 
-            <Form.Group className="mb-3" controlId="id">
-              <Form.Label>Order ID </Form.Label>
-              <Field
-                className="form-control"
-                component="input"
-                name={FORM_FIELDS.id}
-                type="text"
-              />
-            </Form.Group>
+            {!isNewOrderMode && (
+              <>
+                <Form.Group className="mb-3" controlId="id">
+                  <Form.Label>Order ID </Form.Label>
+                  <Field
+                    className="form-control"
+                    component="input"
+                    disabled
+                    name={FORM_FIELDS.id}
+                    type="text"
+                  />
+                </Form.Group>
 
-            <Form.Group className="mb-3" controlId="date">
-              <Form.Label>
-                <RequiredPrefix />
-                Order date{' '}
-              </Form.Label>
-              <Field
-                className={getClassName('date-picker')}
-                component={DatePicker}
-                name={FORM_FIELDS.performed}
-              />
-            </Form.Group>
+                <Form.Group className="mb-3" controlId="date">
+                  <Form.Label>
+                    <RequiredPrefix />
+                    Executed date{' '}
+                  </Form.Label>
+                  <Field
+                    className={getClassName('date-picker')}
+                    name={FORM_FIELDS.executed}
+                    render={({ input }) => {
+                      return (
+                        <DatePicker
+                          onChange={(date) => setStartDate(date)}
+                          selected={input.value}
+                          {...input}
+                        />
+                      );
+                    }}
+                  />
+                </Form.Group>
+              </>
+            )}
 
-            <Form.Group className="mb-3" controlId="date">
+            <Form.Group className="mb-3">
               <Form.Label>Your message </Form.Label>
               <Field
                 as="textarea"
@@ -224,7 +261,21 @@ function OrderForm(props) {
                 onClick={form.reset}
                 variant="outline-danger"
               >
-                Cancel
+                Reset
+              </Button>
+              <Button
+                className={getClassName('button')}
+                onClick={onCancel}
+                variant="outline-primary"
+              >
+                Back
+              </Button>
+              <Button
+                className={getClassName('button')}
+                onClick={() => onDeleteOrder(editOrderId)}
+                variant="danger"
+              >
+                Delete
               </Button>
             </div>
           </form>
@@ -233,5 +284,12 @@ function OrderForm(props) {
     </div>
   );
 }
+
+OrderForm.propTypes = {
+  editOrderId: PropTypes.string,
+  isNewOrderMode: PropTypes.bool,
+  onCancel: PropTypes.func,
+  onDeleteOrder: PropTypes.func,
+};
 
 export default memo(OrderForm);

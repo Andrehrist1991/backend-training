@@ -44,6 +44,9 @@ $ yarn run start:dev
 
 # production mode
 $ yarn run start:prod
+
+# frontend
+$ yarn run front
 ```
 
 ## Test

@@ -23,6 +23,10 @@ const routes = [
     Component: OrderForm,
     route: ROUTES.newOrder,
   },
+  {
+    Component: OrderForm,
+    route: ROUTES.editOrder,
+  },
 ];
 
 function AppRoutes() {

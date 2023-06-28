@@ -10,8 +10,12 @@ export class ProductsService {
   constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>) {
   }
 
-  async getAll(): Promise<Product[]> {
-    return this.productModel.find().exec();
+  async getAll(skip: number, take: number): Promise<Product[]> {
+    return this.productModel
+      .find()
+      .limit(Number(take))
+      .skip(Number(skip))
+      .exec();
   }
 
   async getById(id: string): Promise<Product> {
@@ -21,6 +25,10 @@ export class ProductsService {
   async create(productDto: CreateProductDto): Promise<Product> {
     const newProduct = new this.productModel(productDto);
     return newProduct.save();
+  }
+
+  async totalCount(): Promise<number> {
+    return this.productModel.countDocuments().exec();
   }
   
   async remove(id: string): Promise<Product> {
