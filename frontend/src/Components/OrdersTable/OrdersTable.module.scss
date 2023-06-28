@@ -4,6 +4,24 @@
   td {
     vertical-align: middle;
   }
+
+  th {
+    &:not(:last-child) {
+      cursor: pointer;
+      padding-right: 15px;
+      position: relative;
+      transition: .3s;
+
+      &:hover {
+        background-color: #ceced2;
+      }
+
+      span {
+        padding-left: 2px;
+        position: absolute;
+      }
+    }
+  }
 }
 
 .clickable {

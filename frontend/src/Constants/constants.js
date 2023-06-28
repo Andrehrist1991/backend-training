@@ -18,3 +18,8 @@ export const ORDER_STATUS = freeze({
   new: 'New',
   waiting: 'Waiting',
 });
+
+export const SORT_DIRECTIONS = freeze({
+  asc: 'asc',
+  desc: 'desc',
+});

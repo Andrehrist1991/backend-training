@@ -15,7 +15,7 @@ import styles from './OrdersTable.module.scss';
 const getClassName = cssModuleCXFactory(styles);
 
 function OrdersTable(props) {
-  const { editOrder, orders, updateStatus } = props;
+  const { editOrder, orders, renderSortArrow, sortColumn, updateStatus } = props;
   
   return (
     <div className="container">
@@ -24,19 +24,19 @@ function OrdersTable(props) {
           <Table className={getClassName('table')} striped>
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>ID</th>
-                <th>Type</th>
-                <th>Provider</th>
-                <th>Executed</th>
-                <th>Status</th>
+                <th onClick={() => sortColumn('date')}>Date {renderSortArrow('date')}</th>
+                <th onClick={() => sortColumn('fullName')}>Name {renderSortArrow('fullName')}</th>
+                <th onClick={() => sortColumn('_id')}>ID {renderSortArrow('_id')}</th>
+                <th onClick={() => sortColumn('type')}>Type {renderSortArrow('type')}</th>
+                <th onClick={() => sortColumn('provider')}>Provider {renderSortArrow('provider')}</th>
+                <th onClick={() => sortColumn('executed')}>Executed {renderSortArrow('executed')}</th>
+                <th onClick={() => sortColumn('status')}>Status {renderSortArrow('status')}</th>
                 <th>Edit</th>
               </tr>
             </thead>
             <tbody>
               {map(orders, (order) => (
-                <tr key={order.id}>
+                <tr key={order._id}>
                   <td>{order.date}</td>
                   <td>{order.fullName}</td>
                   <td>{order._id}</td>
@@ -62,6 +62,8 @@ OrdersTable.defaultProps = {
 OrdersTable.propTypes = {
   editOrder: PropTypes.func,
   orders: PropTypes.array,
+  renderSortArrow: PropTypes.func,
+  sortColumn: PropTypes.func,
   updateStatus: PropTypes.func,
 };
 
