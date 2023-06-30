@@ -32,7 +32,9 @@ function OrderFormContainer() {
 
   const onFormSubmit = useCallback((data) => {
     if (isNewOrderMode) {
-      dispatch(addNewOrder(data));
+      dispatch(addNewOrder(data))
+        .unwrap()
+        .then(() => navigate(-1));
     } else {
       dispatch(updateOrder({ id: activeEditOrder.id, data }))
         .unwrap()

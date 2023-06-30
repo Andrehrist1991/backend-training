@@ -1,10 +1,11 @@
 // Modules
 import isEmail from 'validator/lib/isEmail';
+import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
 import isString from 'lodash/isString';
 import size from 'lodash/size';
 
-// Comstants
+// Constants
 import { VALIDATION_MESSAGES } from './validation-messages';
 
 export function composeValidators(...validators) {

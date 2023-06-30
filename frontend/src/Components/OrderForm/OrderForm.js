@@ -2,17 +2,19 @@
 import { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
-import { Field, useField } from 'react-final-form';
+import { Field, useField, useFormState } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import DatePicker from 'react-datepicker';
 import cx  from 'classnames';
 import get from 'lodash/get';
 import size from 'lodash/size';
 
+// Components
+import Input from 'Components/Input';
+
 // Constants
 import { FORM_FIELDS } from 'Constants/orderFormFields';
 import { SALES_PROVIDERS, SALE_TYPES } from 'Constants/constants';
-import { VALIDATION_MESSAGES } from 'Validator/validation-messages';
 
 // Helpers
 import cssModuleCXFactory from 'Helpers/cssModuleCXFactory';
@@ -21,16 +23,15 @@ import cssModuleCXFactory from 'Helpers/cssModuleCXFactory';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from './OrderForm.module.scss';
 
-const getClassName = cssModuleCXFactory(styles);
+// Validators
+import {
+  composeValidators,
+  isRequired,
+  validateEmailWithMessage,
+  validatePhoneByRange,
+} from 'Validator/FormValidator';
 
-const required = (value, type) => {
-  switch (type) {
-    case FORM_FIELDS.email:
-      return value ? undefined : VALIDATION_MESSAGES.email;
-    default:
-      throw new Error(`Unknown type: ${type}`);
-  }
-};
+const getClassName = cssModuleCXFactory(styles);
 
 function RequiredPrefix() {
   return (<span className={getClassName('required-prefix')}>* </span>);
@@ -52,6 +53,8 @@ function OrderForm(props) {
   const push = get(form, 'mutators.push');
   const watchFieldValue = get(watchField, 'input.value');
 
+  const formState = useFormState();
+
   const isAddButtonDisabled = !watchFieldValue[size(watchFieldValue) - 1]?.position
     || !watchFieldValue[size(watchFieldValue) - 1];
 
@@ -68,11 +71,24 @@ function OrderForm(props) {
                 Email
               </Form.Label>
               <Field
-                className="form-control"
-                component="input"
                 name={FORM_FIELDS.email}
-                placeholder="Your email"
-                type="email"
+                validate={composeValidators(
+                  isRequired(),
+                  validateEmailWithMessage('"Email" field is not valid.'),
+                )}
+                render={({ input, meta }) => {
+                  const hasError = !!meta.error && meta.touched;
+                  return (
+                    <Input
+                      {...input}
+                      errorMessage={meta.error}
+                      hasError={hasError}
+                      placeholder="Your email"
+                      prefix="@"
+                      type="email"
+                    />
+                  );
+                }}
               />
             </Form.Group>
 
@@ -82,11 +98,20 @@ function OrderForm(props) {
                 Name
               </Form.Label>
               <Field
-                className="form-control"
-                component="input"
                 name={FORM_FIELDS.name}
-                placeholder="Your name"
-                type="text"
+                validate={isRequired()}
+                render={({ input, meta }) => {
+                  const hasError = !!meta.error && meta.touched;
+                  return (
+                    <Input
+                      {...input}
+                      errorMessage={meta.error}
+                      hasError={hasError}
+                      placeholder="Your name"
+                      type="text"
+                    />
+                  );
+                }}
               />
             </Form.Group>
 
@@ -96,11 +121,20 @@ function OrderForm(props) {
                 Last Name
               </Form.Label>
               <Field
-                className="form-control"
-                component="input"
                 name={FORM_FIELDS.lastName}
-                placeholder="Your last name"
-                type="text"
+                validate={isRequired()}
+                render={({ input, meta }) => {
+                  const hasError = !!meta.error && meta.touched;
+                  return (
+                    <Input
+                      {...input}
+                      errorMessage={meta.error}
+                      hasError={hasError}
+                      placeholder="Your last name"
+                      type="text"
+                    />
+                  );
+                }}
               />
             </Form.Group>
 
@@ -110,11 +144,20 @@ function OrderForm(props) {
                 Phone
               </Form.Label>
               <Field
-                className="form-control"
-                component="input"
                 name={FORM_FIELDS.phone}
-                placeholder="Your phone"
-                type="phone"
+                validate={validatePhoneByRange}
+                render={({ input, meta }) => {
+                  const hasError = !!meta.error && meta.touched;
+                  return (
+                    <Input
+                      {...input}
+                      errorMessage={meta.error}
+                      hasError={hasError}
+                      placeholder="Your phone"
+                      type="text"
+                    />
+                  );
+                }}
               />
             </Form.Group>
 
@@ -133,11 +176,20 @@ function OrderForm(props) {
                         Position #{index + 1}
                       </Form.Label>
                       <Field
-                        className="form-control"
-                        component="input"
                         name={`${position}.${FORM_FIELDS.position}`}
-                        placeholder="Pen"
-                        type="text"
+                        validate={isRequired()}
+                        render={({ input, meta }) => {
+                          const hasError = !!meta.error && meta.touched;
+                          return (
+                            <Input
+                              {...input}
+                              errorMessage={meta.error}
+                              hasError={hasError}
+                              placeholder="Pen"
+                              type="text"
+                            />
+                          );
+                        }}
                       />
                       <span
                         className={cx(getClassName('remove-cross'), {
@@ -251,6 +303,7 @@ function OrderForm(props) {
             <div className="mb-3 d-flex justify-content-end">
               <Button
                 className={getClassName('button')}
+                disabled={formState.pristine || formState.invalid}
                 type="submit"
                 variant="primary"
               >
@@ -258,6 +311,7 @@ function OrderForm(props) {
               </Button>
               <Button
                 className={getClassName('button')}
+                disabled={formState.pristine || formState.invalid}
                 onClick={form.reset}
                 variant="outline-danger"
               >
@@ -270,13 +324,15 @@ function OrderForm(props) {
               >
                 Back
               </Button>
-              <Button
-                className={getClassName('button')}
-                onClick={() => onDeleteOrder(editOrderId)}
-                variant="danger"
-              >
-                Delete
-              </Button>
+              {!isNewOrderMode && (
+                <Button
+                  className={getClassName('button')}
+                  onClick={() => onDeleteOrder(editOrderId)}
+                  variant="danger"
+                >
+                  Delete
+                </Button>
+              )}
             </div>
           </form>
         </div>

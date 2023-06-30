@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Header,
-  Headers,
   HttpCode,
   HttpStatus,
   Get,
