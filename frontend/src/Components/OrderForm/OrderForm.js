@@ -1,5 +1,5 @@
 // Modules
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'react-bootstrap';
 import { Field, useField, useFormState } from 'react-final-form';
@@ -46,7 +46,7 @@ function OrderForm(props) {
     onCancel,
     onDeleteOrder,
   } = props;
-  const [startDate, setStartDate] = useState(new Date());
+
   const watchField = useField(FORM_FIELDS.position);
 
   const pop = get(form, 'mutators.pop');
@@ -279,7 +279,7 @@ function OrderForm(props) {
                     render={({ input }) => {
                       return (
                         <DatePicker
-                          onChange={(date) => setStartDate(date)}
+                          // onChange={(date) => setStartDate(date)}
                           selected={input.value}
                           {...input}
                         />

@@ -1,6 +1,6 @@
 // Modules
 import { memo } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, Spinner, Table } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import cx  from 'classnames';
 import lowerCase  from 'lodash/lowerCase';
@@ -21,7 +21,7 @@ function OrdersTable(props) {
     <div className="container">
       <div className="row justify-content-center">
         <div className="col-md-10 pt-3">
-          <Table className={getClassName('table')} striped>
+          {!!orders ? (<Table className={getClassName('table')} striped>
             <thead>
               <tr>
                 <th onClick={() => sortColumn('date')}>Date {renderSortArrow('date')}</th>
@@ -48,7 +48,11 @@ function OrdersTable(props) {
                 </tr>
               ))}
             </tbody>
-          </Table>
+          </Table>) : (
+            <div className="d-flex justify-content-center mb-3 mt-3">
+              <Spinner animation="border" variant="primary" />
+            </div>
+          )}
         </div>
       </div>
     </div>

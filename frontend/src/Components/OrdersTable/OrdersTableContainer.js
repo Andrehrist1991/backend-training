@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 import sortBy from 'lodash/sortBy';
 
 // Components
@@ -20,6 +21,8 @@ import ordersSelector from 'Engine/Orders/Selectors/ordersSelector';
 import paginationSelector from 'Engine/Orders/Selectors/paginationSelector';
 
 const orderStatuses = Object.values(ORDER_STATUS);
+
+const doneStatuses = [ORDER_STATUS.finished];
 
 function OrdersTableContainer() {
   const dispatch = useDispatch();
@@ -49,7 +52,10 @@ function OrdersTableContainer() {
     }, 0);
 
     dispatch(updateOrder({ id, 
-      data: { status: orderStatuses[indexOfItem] }
+      data: {
+        executed: doneStatuses.includes(orderStatuses[indexOfItem]) ? moment() : null,
+        status: orderStatuses[indexOfItem]
+      }
     }));
   }, [dispatch]);
 
