@@ -61,6 +61,7 @@ function OrderFormContainer() {
       return {
         [FORM_FIELDS.date]: activeEditOrder.date,
         [FORM_FIELDS.email]: activeEditOrder.email,
+        [FORM_FIELDS.executed]: !!activeEditOrder.executed ? new Date(activeEditOrder.executed) : null,
         [FORM_FIELDS.id]: activeEditOrder.id,
         [FORM_FIELDS.lastName]: activeEditOrder.lastName,
         [FORM_FIELDS.message]: activeEditOrder.message,

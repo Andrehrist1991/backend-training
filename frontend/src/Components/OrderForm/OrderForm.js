@@ -279,7 +279,6 @@ function OrderForm(props) {
                     render={({ input }) => {
                       return (
                         <DatePicker
-                          // onChange={(date) => setStartDate(date)}
                           selected={input.value}
                           {...input}
                         />
